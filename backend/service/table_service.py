@@ -3,6 +3,28 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy import desc, asc
 import logging
 
+def clear_all():
+    try:
+        db.drop_all() # drop all tables
+        db.create_all()
+        db.session.commit()
+        logging.info("All data cleared")
+        return {"isSuccess": True, "status": 200, "message": "All data successfully cleared"}
+    except IntegrityError as e:
+        db.session.rollback()
+        logging.error(f"Integrity error occurred ${str(e)}")
+        return {"isSuccess": False, "status": 400, "message": "Integrity error occurred: " + str(e)}
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        logging.error(f"Database error occurred ${str(e)}")
+        return {"isSuccess": False, "status": 400, "message": "Database error occurred: " + str(e)}
+    except Exception as e:
+        db.session.rollback()
+        logging.error(f"Error occurred ${str(e)}")
+        return {"isSuccess": False, "status": 500, "message": "Error occurred: " + str(e)}
+    finally:
+        db.session.close()
+
 
 def get_ranking():
     try:

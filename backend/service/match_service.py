@@ -1,6 +1,8 @@
 from model.model import db, Team, Match_Results, Points
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 import logging
+
+
 def update_match(first_team_name, second_team_name, first_team_score, second_team_score):
     try:
         team1 = Team.query.filter_by(name=first_team_name).one()

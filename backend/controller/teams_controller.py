@@ -18,7 +18,11 @@ class TeamsAPI(Resource):
         logging.info("Handling GET request at TeamsAPI")
         group_number = request.args.get("group_number")
         result = get_team(group_number)
-        return jsonify(status=result["status"], message=result["message"], data=result["data"])
+        if result["isSuccess"]:
+            return jsonify(status=result["status"], message=result["message"], data=result["data"])
+        else:
+            return jsonify(status=result["status"], message=result["message"])
+
 
     def patch(self):
         logging.info("Handling PATCH request at TeamsAPI")
