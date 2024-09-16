@@ -9,16 +9,17 @@ class TeamsAPI(Resource):
         group_number = data["group_number"]
         registration_date = data["registration_date"] + "/2024" # assumption that this is happening in 2024
         result = add_team(name, registration_date, group_number)
-        return result
+
+        return jsonify(status=result["status"], message=result["message"])
 
     def get(self):
         group_number = request.args.get("group_number")
         result = get_team(group_number)
-        return result
+        return jsonify(status=result["status"], message=result["message"], data=result["data"])
 
     def patch(self):
         group_number = request.args.get("group_number")
         data = request.json
         new_name = data["name"]
         result = update_team(group_number, new_name)
-        return result
+        return jsonify(status=result["status"], message=result["message"])
