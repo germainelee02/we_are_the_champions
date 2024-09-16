@@ -1,6 +1,6 @@
 from model.model import db, Team, Match_Results, Points
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
-
+import logging
 def update_match(first_team_name, second_team_name, first_team_score, second_team_score):
     try:
         team1 = Team.query.filter_by(name=first_team_name).one()
@@ -32,17 +32,20 @@ def update_match(first_team_name, second_team_name, first_team_score, second_tea
         else:
             team1_points.points += 1
             team2_points.points += 1
-
         db.session.commit()
+        logging.info("Updated match")
         return {"isSuccess": True, "status": 200, "message": "Match successfully updated"}
     except IntegrityError as e:
         db.session.rollback()
+        logging.error(f"Integrity error occurred ${str(e)}")
         return {"isSuccess": False, "status": 400, "message": "Integrity error occurred: " + str(e)}
     except SQLAlchemyError as e:
         db.session.rollback()
+        logging.error(f"Database error occurred ${str(e)}")
         return {"isSuccess": False, "status": 400, "message": "Database error occurred: " + str(e)}
     except Exception as e:
         db.session.rollback()
+        logging.error(f"Error occurred ${str(e)}")
         return {"isSuccess": False, "status": 500, "message": "Error occurred: " + str(e)}
     finally:
         db.session.close()

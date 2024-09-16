@@ -1,6 +1,8 @@
 from model.model import db, Team, Match_Results, Points
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy import desc, asc
+import logging
+
 
 def get_ranking():
     try:
@@ -16,15 +18,19 @@ def get_ranking():
             }
             data.append(data_obj)
         db.session.commit()
+        logging.info("Rankings retrieved")
         return {"isSuccess": True, "status": 200, "message": "Ranks successfully retrieved", "data": data}
     except IntegrityError as e:
         db.session.rollback()
+        logging.error(f"Integrity error occurred ${str(e)}")
         return {"isSuccess": False, "status": 400, "message": "Integrity error occurred: " + str(e)}
     except SQLAlchemyError as e:
         db.session.rollback()
+        logging.error(f"Database error occurred ${str(e)}")
         return {"isSuccess": False, "status": 400, "message": "Database error occurred: " + str(e)}
     except Exception as e:
         db.session.rollback()
+        logging.error(f"Error occurred ${str(e)}")
         return {"isSuccess": False, "status": 500, "message": "Error occurred: " + str(e)}
     finally:
         db.session.close()

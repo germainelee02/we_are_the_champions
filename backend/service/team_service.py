@@ -1,20 +1,26 @@
 from model.model import db, Team, Points, Match_Results
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
+import logging
+
 
 def update_team(group_number, new_name): # should only be able the change their name
     try:
         updated_team = Team.query.filter_by(group_number=group_number).one()
         updated_team.name = new_name
         db.session.commit()
+        logging.info("Team updated")
         return {"isSuccess": True, "status": 200, "message": "Team successfully updated"}
     except IntegrityError as e:
         db.session.rollback()
+        logging.error(f"Integrity error occurred ${str(e)}")
         return {"isSuccess": False, "status": 400, "message": "Integrity error occurred: " + str(e)}
     except SQLAlchemyError as e:
         db.session.rollback()
+        logging.error(f"Database error occurred ${str(e)}")
         return {"isSuccess": False, "status": 400, "message": "Database error occurred: " + str(e)}
     except Exception as e:
         db.session.rollback()
+        logging.error(f"Error occurred ${str(e)}")
         return {"isSuccess": False, "status": 500, "message": "Error occurred: " + str(e)}
     finally:
         db.session.close()
@@ -48,12 +54,15 @@ def get_team(group_number):
         return {"isSuccess": True, "status": 200, "message": "Team successfully fetched", "data": team_response}
     except IntegrityError as e:
         db.session.rollback()
+        logging.error(f"Integrity error occurred ${str(e)}")
         return {"isSuccess": False, "status": 400, "message": "Integrity error occurred: " + str(e)}
     except SQLAlchemyError as e:
         db.session.rollback()
+        logging.error(f"Database error occurred ${str(e)}")
         return {"isSuccess": False, "status": 400, "message": "Database error occurred: " + str(e)}
     except Exception as e:
         db.session.rollback()
+        logging.error(f"Error occurred ${str(e)}")
         return {"isSuccess": False, "status": 500, "message": "Error occurred: " + str(e)}
     finally:
         db.session.close()
@@ -73,12 +82,15 @@ def add_team(team_name, registration_date, group_number):
         return {"isSuccess": True, "status": 201, "message": "Team successfully added"}
     except IntegrityError as e:
         db.session.rollback()
+        logging.error(f"Integrity error occurred ${str(e)}")
         return {"isSuccess": False, "status": 400, "message": "Integrity error occurred: " + str(e)}
     except SQLAlchemyError as e:
         db.session.rollback()
+        logging.error(f"Database error occurred ${str(e)}")
         return {"isSuccess": False, "status": 400, "message": "Database error occurred: " + str(e)}
     except Exception as e:
         db.session.rollback()
+        logging.error(f"Error occurred ${str(e)}")
         return {"isSuccess": False, "status": 500, "message": "Error occurred: " + str(e)}
     finally:
         db.session.close()

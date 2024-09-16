@@ -1,9 +1,11 @@
 from flask_restful import Resource
 from flask import request, jsonify
 from service.team_service import add_team, get_team, update_team
+import logging
 
 class TeamsAPI(Resource):
     def post(self):
+        logging.info("Handling POST request at TeamsAPI")
         data = request.json
         name = data["name"]
         group_number = data["group_number"]
@@ -13,11 +15,13 @@ class TeamsAPI(Resource):
         return jsonify(status=result["status"], message=result["message"])
 
     def get(self):
+        logging.info("Handling GET request at TeamsAPI")
         group_number = request.args.get("group_number")
         result = get_team(group_number)
         return jsonify(status=result["status"], message=result["message"], data=result["data"])
 
     def patch(self):
+        logging.info("Handling PATCH request at TeamsAPI")
         group_number = request.args.get("group_number")
         data = request.json
         new_name = data["name"]

@@ -1,9 +1,11 @@
 from flask_restful import Resource
 from flask import request, jsonify
 from service.match_service import add_match, update_match
+import logging
 
 class MatchAPI(Resource):
     def post(self):
+        logging.info("Handling POST request at MatchAPI")
         data = request.json
         first_team_name = data["first_team_name"]
         second_team_name = data["second_team_name"]
@@ -13,6 +15,7 @@ class MatchAPI(Resource):
         return jsonify(status=result["status"], message=result["message"])
 
     def patch(self):
+        logging.info("Handling PATCH request at MatchAPI")
         data = request.json
         first_team_name = data["first_team_name"]
         second_team_name = data["second_team_name"]
