@@ -13,6 +13,7 @@ CORS(app, resources={r"/*": {"origins": "*"}}) # obviously change this
 
 
 with app.app_context():
+    # db.drop_all() # check if this is good practice
     db.create_all()
 api.add_resource(TeamsAPI, '/team')
 
