@@ -22,7 +22,6 @@ class TeamsAPI(Resource):
 
     def patch(self):
         logging.info("Handling PATCH request at TeamsAPI")
-        # group_number = request.args.get("group_number")
         old_name = request.args.get("name")
         data = request.json
         new_name = data["name"]
