@@ -12,7 +12,7 @@ Frontend: React, JavaScript
 
 ## Assumptions
 1. This annual game is happening this year (i.e. 2024)
-2. Each team can only with other teams in the same group
+2. Each team can only play with other teams in the same group
 3. Teams cannot have duplicate names, and each team is identifiable from their name, even if they change it afterwards
 4. Each team cannot change group midway
 5. Each team can only edit their name, and cannot edit their group number or registration date
