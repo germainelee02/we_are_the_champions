@@ -26,16 +26,19 @@ def clear_all():
         db.session.close()
 
 
-def get_ranking():
+def get_ranking(group_number):
     try:
-        teams = Points.query\
-            .join(Team, Team.id == Points.team_id)\
+        teams = db.session\
+            .query(Team.name, Team.registration_date, Points.points)\
+            .join(Points, Team.id == Points.team_id)\
+            .where(Team.group_number == group_number)\
             .order_by(desc(Points.points), asc(Team.registration_date))\
             .all()
         data = []
         for team in teams:
             data_obj = {
-                "team_id": team.team_id,
+                "team_name": team.name,
+                "registration_date": team.registration_date,
                 "points": team.points,
             }
             data.append(data_obj)

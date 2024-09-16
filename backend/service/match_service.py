@@ -54,33 +54,39 @@ def update_match(first_team_name, second_team_name, first_team_score, second_tea
 
 
 
-def add_match(first_team_name, second_team_name, first_team_score, second_team_score):
+def add_matches(data):
     try:
-        team1 = Team.query.filter_by(name=first_team_name).one()
-        team2 = Team.query.filter_by(name=second_team_name).one()
-        team1_id = team1.id
-        team2_id = team2.id
-        match1 = Match_Results(
-            first_team=team1_id,
-            second_team=team2_id,
-            first_team_score=first_team_score,
-            second_team_score=second_team_score)
-        match2 = Match_Results(
-            first_team=team2_id,
-            second_team=team1_id,
-            first_team_score=second_team_score,
-            second_team_score=first_team_score)
-        db.session.add(match1)
-        db.session.add(match2)
-        team1_points = Points.query.filter_by(team_id=team1_id).one()
-        team2_points = Points.query.filter_by(team_id=team2_id).one()
-        if first_team_score > second_team_score:
-            team1_points.points += 3
-        elif first_team_score < second_team_score:
-            team2_points.points += 3
-        else: # tie
-            team1_points.points += 1
-            team2_points.points += 1
+        for match in data:
+            first_team_name = match["first_team_name"]
+            second_team_name = match["second_team_name"]
+            first_team_score = match["first_team_score"]
+            second_team_score = match["second_team_score"]
+            team1 = Team.query.filter_by(name=first_team_name).one()
+            team2 = Team.query.filter_by(name=second_team_name).one()
+            team1_id = team1.id
+            team2_id = team2.id
+            match1 = Match_Results(
+                first_team=team1_id,
+                second_team=team2_id,
+                first_team_score=first_team_score,
+                second_team_score=second_team_score)
+            match2 = Match_Results(
+                first_team=team2_id,
+                second_team=team1_id,
+                first_team_score=second_team_score,
+                second_team_score=first_team_score)
+            db.session.add(match1)
+            db.session.add(match2)
+            team1_points = Points.query.filter_by(team_id=team1_id).one()
+            team2_points = Points.query.filter_by(team_id=team2_id).one()
+            if first_team_score > second_team_score:
+                team1_points.points += 3
+            elif first_team_score < second_team_score:
+                team2_points.points += 3
+            else: # tie
+                team1_points.points += 1
+                team2_points.points += 1
+            db.session.flush()
         db.session.commit()
         return {"isSuccess": True, "status": 200, "message": "Match successfully added"}
     except IntegrityError as e:

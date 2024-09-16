@@ -3,9 +3,9 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 import logging
 
 
-def update_team(group_number, new_name): # should only be able the change their name
+def update_team(old_name, new_name): # should only be able the change their name
     try:
-        updated_team = Team.query.filter_by(group_number=group_number).one()
+        updated_team = Team.query.filter_by(name=old_name).one()
         updated_team.name = new_name
         db.session.commit()
         logging.info("Team updated")
@@ -26,9 +26,9 @@ def update_team(group_number, new_name): # should only be able the change their 
         db.session.close()
 
 
-def get_team(group_number):
+def get_team(name):
     try:
-        team = Team.query.filter_by(group_number=group_number).one()
+        team = Team.query.filter_by(name=name).one()
         # get matches, played, win count, loss count, rank
         win_count = Match_Results.query.\
             filter_by(first_team=team.id).\
@@ -67,17 +67,23 @@ def get_team(group_number):
     finally:
         db.session.close()
 
-def add_team(team_name, registration_date, group_number):
+def add_teams(data):
     try:
-        new_team = Team(
-            name=team_name,
-            registration_date=db.func.to_date(registration_date, "DD/MM/YYYY"),
-            group_number=group_number)
-        db.session.add(new_team)
+        all_teams = []
+        all_points = []
+        for team in data:
+            new_team = Team(
+                name=team["name"],
+                registration_date=db.func.to_date(team["registration_date"] + "/2024", "DD/MM/YYYY"),
+                group_number=team["group_number"])
+            all_teams.append(new_team)
+        db.session.add_all(all_teams)
         db.session.flush()
+        for team in all_teams:
+            new_point = Points(team_id=team.id, points=0)
+            all_points.append(new_point)
         # when there is a new team, its points table should be initialised to zero
-        team_points = Points(team_id=new_team.id, points=0)
-        db.session.add(team_points)
+        db.session.add_all(all_points)
         db.session.commit()
         return {"isSuccess": True, "status": 201, "message": "Team successfully added"}
     except IntegrityError as e:

@@ -9,16 +9,14 @@ import logging
 import os
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://germaine:govtechtkh@localhost:5432/championship_db'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("SQLALCHEMY_DATABASE_URI")
 api = Api(app)
 db.init_app(app)
 
-CORS(app, resources={r"/*": {"origins": "*"}}) # obviously change this
+CORS(app, resources={r"/*": {"origins": "http://localhost:4000"}})
 
 
 with app.app_context():
-    # db.drop_all() # check if this is good practice
     logging.info("Creating all tables...")
     db.create_all()
     logging.info("Tables created")
