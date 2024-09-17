@@ -7,7 +7,7 @@ Backend: PostgreSQL, Python, Flask
 Frontend: React, JavaScript
 
 ## Instructions
-1. From the `backend` sub-directory, run the command `docker-compose up`
+1. From the `backend` sub-directory, run the command `docker compose up`
 2. From the `frontend` sub-directory, run the command `npm install`, before running `npm start`
 
 ## Assumptions
