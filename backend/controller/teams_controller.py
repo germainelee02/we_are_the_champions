@@ -5,14 +5,14 @@ import logging
 
 class TeamsAPI(Resource):
     def post(self):
-        logging.info("Handling POST request at TeamsAPI")
         data = request.json["data"]
+        logging.info(f'Adding teams: {data}')
         result = add_teams(data)
         return make_response(jsonify(message=result["message"]), result["status"])
 
     def get(self):
-        logging.info("Handling GET request at TeamsAPI")
         name = request.args.get("name")
+        logging.info(f'Retrieving team {name}')
         result = get_team(name)
         if result["isSuccess"]:
             return make_response(jsonify(message=result["message"], data=result["data"]), result["status"])
@@ -21,9 +21,9 @@ class TeamsAPI(Resource):
 
 
     def patch(self):
-        logging.info("Handling PATCH request at TeamsAPI")
         old_name = request.args.get("name")
         data = request.json
         new_name = data["name"]
+        logging.info(f'Updating team name from {old_name} to {new_name}')
         result = update_team(old_name, new_name)
         return make_response(jsonify(message=result["message"]), result["status"])

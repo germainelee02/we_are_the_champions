@@ -5,9 +5,9 @@ import logging
 
 class MatchAPI(Resource):
     def post(self):
-        logging.info("Handling POST request at MatchAPI")
         data = request.json["data"]
         result = add_matches(data)
+        logging.info(f'Adding matches: {data}')
         return make_response(jsonify(message=result["message"]), result["status"])
 
     def patch(self):
@@ -17,6 +17,7 @@ class MatchAPI(Resource):
         second_team_name = data["second_team_name"]
         first_team_score = data["first_team_score"]
         second_team_score = data["second_team_score"]
+        logging.info(f'Updating a match: {data}')
         result = update_match(first_team_name, second_team_name, first_team_score, second_team_score)
         return make_response(jsonify(message=result["message"]), result["status"])
 

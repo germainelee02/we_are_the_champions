@@ -6,13 +6,13 @@ import logging
 
 class TableAPI(Resource):
     def delete(self):
-        logging.info("Handling DELETE request at TableAPI")
+        logging.info("Clearing all data")
         result = clear_all()
         return make_response(jsonify(message=result["message"]), result["status"])
 
     def get(self):
-        logging.info("Handling GET request at TableAPI")
         group_number = request.args.get("group_number")
+        logging.info(f"Getting rankings for group {group_number}")
         result = get_ranking(group_number)
         if result["isSuccess"]:
             return make_response(jsonify(message=result["message"], data=result["data"]), result["status"])
