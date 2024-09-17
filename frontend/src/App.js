@@ -138,9 +138,13 @@ const App = () => {
         />
         <button onClick={handleRanking}>Get Rankings</button>
           {rankings && rankings.map((team, index) => (
-            <li key={index}>RANK {index + 1}: {team.team_name},
-            Points: {team.points},
-            Registration date: {team.registration_date.slice(0, team.registration_date.length - 13)}</li>
+
+            <li key={index}>
+                {index < 4 && '[QUALIFIED] '}
+                Rank {index + 1}: {team.team_name},
+                Points: {team.points},
+                Registration date: {team.registration_date.slice(0, team.registration_date.length - 13)}
+            </li>
           ))}
       </div>
 
