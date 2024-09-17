@@ -9,6 +9,8 @@ import logging
 import os
 
 app = Flask(__name__)
+
+# initialise database
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("SQLALCHEMY_DATABASE_URI")
 api = Api(app)
 db.init_app(app)
